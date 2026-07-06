@@ -370,6 +370,16 @@ case "$ARG3" in
     ;;
 esac
 
+if [ "$HARNESS" = agy ]; then
+  agy_quota_rc=0
+  "$SCRIPT_DIR/fm-harness-quota.sh" agy || agy_quota_rc=$?
+  if [ "$agy_quota_rc" -eq 1 ]; then
+    echo "AGY_QUOTA: agy exhausted, spawning on grok" >&2
+    HARNESS=grok
+    LAUNCH=$(launch_template grok "$KIND") || { echo "error: no launch template for harness 'grok' after agy quota fallback" >&2; exit 1; }
+  fi
+fi
+
 # config/secondmate-harness may carry optional model/effort tokens alongside the
 # harness ("<harness> [<model>] [<effort>]"). They apply only when this is a
 # --secondmate spawn and no explicit per-spawn harness/raw launch was supplied, so

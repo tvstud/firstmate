@@ -209,6 +209,9 @@ Without it, crewmates often search the filesystem instead of using the worktree 
 Pipeline steps invoke `bin/no-mistakes-agy-shim` (or `~/.local/bin/no-mistakes-agy-shim`), which runs `agy -p` once and emits Claude stream-json.
 Headless `agy -p` can hang indefinitely; the shim honors `FM_AGY_SHIM_TIMEOUT` (default 600s) when `timeout` is on PATH.
 
+**Quota fallback.**
+`bin/fm-harness-quota.sh agy` probes headless availability before spawn; when quota is exhausted, `bin/fm-spawn.sh` substitutes `grok` for that launch (bootstrap prints `AGY_QUOTA_EXHAUSTED` when detected).
+
 First launch on a machine may require Google sign-in.
 First launch per directory shows a directory-trust dialog ("Do you trust the contents of this project?"); accept with Enter on "Yes, I trust this folder".
 `fm-spawn` installs the same per-worktree `.claude/settings.local.json` Stop hook as claude so turn-end touches `state/<id>.turn-ended`.
