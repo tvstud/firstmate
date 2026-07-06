@@ -11,7 +11,8 @@
 #                 "TASKS_AXI: available", "TANGLE: <remediation>",
 #                 "SECONDMATE_SYNC: secondmate <id>: skipped: <reason>",
 #                 "NUDGE_SECONDMATES: <window-targets...>",
-#                 "AGY_QUOTA_EXHAUSTED: dispatch falls back to grok via fm-spawn",
+#                 "AGY_QUOTA_EXHAUSTED: dispatch falls back to grok via fm-spawn"
+#                 (agy quota probe skipped when FM_BOOTSTRAP_SKIP_AGY_QUOTA is set),
 #                 "FMX: X mode on ..." or "FMX: X mode off ...".
 #          A NUDGE_SECONDMATES line lists the RUNNING secondmate windows whose
 #          worktree was fast-forwarded to firstmate's own current default-branch
@@ -407,7 +408,7 @@ fi
 if command -v no-mistakes >/dev/null 2>&1 && ! no_mistakes_compatible; then
   echo "MISSING: no-mistakes (install: $(install_cmd no-mistakes))"
 fi
-if command -v agy >/dev/null 2>&1; then
+if [ -z "${FM_BOOTSTRAP_SKIP_AGY_QUOTA:-}" ] && command -v agy >/dev/null 2>&1; then
   agy_quota_rc=0
   "$FM_ROOT/bin/fm-harness-quota.sh" agy >/dev/null || agy_quota_rc=$?
   if [ "$agy_quota_rc" -eq 1 ]; then
